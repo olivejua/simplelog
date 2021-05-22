@@ -1,0 +1,13 @@
+HELP.md
+!gradle/wrapper/gradle-wrapper.jar
+
+.gradle
+.idea
+
+application-oauth.properties
+application-real-db.properties
+
+build
+out
+
+src/main/generated
