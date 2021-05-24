@@ -12,7 +12,7 @@ import javax.persistence.EntityManager;
 @SpringBootTest
 @Transactional
 @Rollback(value = false)
-public class insertDataTest {
+public class InsertDataTest {
 
     @Autowired
     EntityManager em;
