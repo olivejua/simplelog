@@ -1,9 +1,13 @@
 package com.simplelog.api.domain;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-
-import javax.persistence.*;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -30,5 +34,17 @@ public class User extends BaseTimeEntity {
         this.email = email;
         this.socialCode = socialCode;
         this.profileMessage = profileMessage;
+    }
+
+    public User(Long id, String nickname, String email, String socialCode, String profileMessage) {
+        this(nickname, email, socialCode, profileMessage);
+        this.id = id;
+    }
+
+    /**
+     * Getter
+     */
+    public Long getId() {
+        return id;
     }
 }
