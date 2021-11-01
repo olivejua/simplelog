@@ -37,4 +37,29 @@ public class Post extends BaseTimeEntity {
         this.user = user;
         this.content = content;
     }
+
+    public Post(Long id, User user, String content, List<String> inputTags) {
+        this(user, content);
+        this.id = id;
+        addTags(inputTags);
+    }
+
+    public void addTags(List<String> inputTags) {
+        this.postTags.addAll(this, inputTags);
+    }
+
+    public boolean hasTags() {
+        return postTags.exists();
+    }
+
+    /**
+     * Getter
+     */
+    public Long getId() {
+        return id;
+    }
+
+    public PostTags getPostTags() {
+        return postTags;
+    }
 }

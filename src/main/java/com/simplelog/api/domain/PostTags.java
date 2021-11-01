@@ -44,4 +44,8 @@ public class PostTags {
 	public List<PostTag> getAll() {
 		return tags;
 	}
+
+	public boolean exists() {
+		return !tags.isEmpty();
+	}
 }
