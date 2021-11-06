@@ -5,7 +5,7 @@ HELP.md
 .idea
 
 application-oauth.yml
-application-real-db.yml
+application-db.yml
 
 build
 out
