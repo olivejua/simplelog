@@ -1,10 +1,6 @@
 package com.simplelog.api.domain;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -26,14 +22,14 @@ public class User extends BaseTimeEntity {
     @Column(nullable = false, length = 20)
     private String socialCode;
 
-    @Column(nullable = false, length = 300)
-    private String profileMessage;
+    @Embedded
+    private Profile profile;
 
     public User(String nickname, String email, String socialCode, String profileMessage) {
         this.nickname = nickname;
         this.email = email;
         this.socialCode = socialCode;
-        this.profileMessage = profileMessage;
+        this.profile = new Profile(profileMessage);
     }
 
     public User(Long id, String nickname, String email, String socialCode, String profileMessage) {
@@ -42,9 +38,24 @@ public class User extends BaseTimeEntity {
     }
 
     /**
+     * update
+     */
+    public void updateProfileImage(String imageUrl) {
+        profile.updateImageUrl(imageUrl);
+    }
+
+    public void removeProfileImage() {
+        profile.removeImageUrl();
+    }
+
+    /**
      * Getter
      */
     public Long getId() {
         return id;
+    }
+
+    public Profile getProfile() {
+        return profile;
     }
 }
