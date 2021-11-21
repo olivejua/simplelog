@@ -1,4 +1,4 @@
-package com.simplelog.api.commons.images;
+package com.simplelog.api.commons.upload;
 
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.*;
@@ -30,9 +30,8 @@ public class S3Uploader {
      * @param multipartFile 유저가 업로드한 파일
      * @param savedPath 저장될 경로명 (파일 확장자까지 포함)
      * @return 저장한 ImageUrl
-     * @throws IOException multipartFile -> File 변환 시 발생할 수 있는 예외
      */
-    public String upload(MultipartFile multipartFile, String savedPath) throws IOException {
+    public String upload(MultipartFile multipartFile, String savedPath) {
         File uploadFile = convert(multipartFile)
                 .orElseThrow(() -> new IllegalArgumentException("error: MultipartFile -> File convert fail"));
 
@@ -58,13 +57,17 @@ public class S3Uploader {
         log.info("파일이 삭제되지 못했습니다.");
     }
 
-    private Optional<File> convert(MultipartFile file) throws IOException {
-        File convertFile = new File(System.getProperty("user.dir") + "/" + file.getOriginalFilename());
-        if (convertFile.createNewFile()) {
-            try (FileOutputStream fos = new FileOutputStream(convertFile)) {
-                fos.write(file.getBytes());
+    private Optional<File> convert(MultipartFile file) {
+        try {
+            File convertFile = new File(System.getProperty("user.dir") + "/" + file.getOriginalFilename());
+            if (convertFile.createNewFile()) {
+                try (FileOutputStream fos = new FileOutputStream(convertFile)) {
+                    fos.write(file.getBytes());
+                }
+                return Optional.of(convertFile);
             }
-            return Optional.of(convertFile);
+        } catch (IOException e) {
+            log.warn("error: MultipartFile -> File convert fail");
         }
 
         return Optional.empty();
