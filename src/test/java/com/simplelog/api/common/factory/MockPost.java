@@ -18,7 +18,8 @@ public class MockPost {
 		private Long id;
 		private User user;
 		private String content = "test content";
-		private final List<String> postTags = new ArrayList<>();
+		private List<String> tags = new ArrayList<>();
+		private List<String> images = new ArrayList<>();
 
 		public Builder id(Long id) {
 			this.id = id;
@@ -36,17 +37,26 @@ public class MockPost {
 		}
 
 		public Builder postTags(List<String> tags) {
-			this.postTags.addAll(tags);
+			this.tags = tags;
+			return this;
+		}
+
+		public Builder postImages(List<String> images) {
+			this.images = images;
 			return this;
 		}
 
 		public Post build() {
-			return new Post(
+			Post post = new Post(
 				id,
 				user,
-				content,
-				postTags
+				content
 			);
+
+			post.addTags(tags);
+			post.addImages(images);
+
+			return post;
 		}
 	}
 }

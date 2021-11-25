@@ -1,6 +1,7 @@
 package com.simplelog.api.domain;
 
 import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -26,19 +27,30 @@ public class User extends BaseTimeEntity {
     @Column(nullable = false, length = 20)
     private String socialCode;
 
-    @Column(nullable = false, length = 300)
-    private String profileMessage;
+    @Embedded
+    private Profile profile;
 
-    public User(String nickname, String email, String socialCode, String profileMessage) {
+    public User(String nickname, String email, String socialCode, Profile profile) {
         this.nickname = nickname;
         this.email = email;
         this.socialCode = socialCode;
-        this.profileMessage = profileMessage;
+        this.profile = profile;
     }
 
-    public User(Long id, String nickname, String email, String socialCode, String profileMessage) {
-        this(nickname, email, socialCode, profileMessage);
+    public User(Long id, String nickname, String email, String socialCode, Profile profile) {
+        this(nickname, email, socialCode, profile);
         this.id = id;
+    }
+
+    /**
+     * Update
+     */
+    public void updateProfileImage(String imageUrl) {
+        profile = new Profile(profile.getMessage(), imageUrl);
+    }
+
+    public void removeProfileImage() {
+        profile = new Profile(profile.getMessage());
     }
 
     /**
@@ -46,5 +58,16 @@ public class User extends BaseTimeEntity {
      */
     public Long getId() {
         return id;
+    }
+
+    public String getProfileImagePath() {
+        return profile.getImagePath();
+    }
+
+    /**
+     * Confirm
+     */
+    public boolean hasProfileImage() {
+        return profile.hasImage();
     }
 }

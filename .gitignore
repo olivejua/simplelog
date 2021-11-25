@@ -4,10 +4,14 @@ HELP.md
 .gradle
 .idea
 
-application-oauth.yml
-application-db.yml
+src/main/resources/application-oauth.yml
+src/main/resources/application-db.yml
+src/main/resources/application-aws.yml
+
+src/test/resources/application-aws.yml
 
 build
 out
 
 src/main/generated
+src/main/resources/static/docs

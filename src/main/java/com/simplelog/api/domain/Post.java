@@ -31,25 +31,34 @@ public class Post extends BaseTimeEntity {
     private String content;
 
     @Embedded
-    private PostTags postTags = new PostTags();
+    private PostTags tags = new PostTags();
+
+    @Embedded
+    private PostImages images = new PostImages();
 
     public Post(User user, String content) {
         this.user = user;
         this.content = content;
     }
 
-    public Post(Long id, User user, String content, List<String> inputTags) {
+    public Post(Long id, User user, String content) {
         this(user, content);
         this.id = id;
-        addTags(inputTags);
     }
 
-    public void addTags(List<String> inputTags) {
-        this.postTags.addAll(this, inputTags);
+    /**
+     * Update
+     */
+    public void addTags(List<String> tags) {
+        this.tags.addAll(this, tags);
     }
 
-    public boolean hasTags() {
-        return postTags.exists();
+    public void addImages(List<String> images) {
+        this.images.addAll(images);
+    }
+
+    public void removeImagesAll() {
+        images.removeAll();
     }
 
     /**
@@ -59,7 +68,22 @@ public class Post extends BaseTimeEntity {
         return id;
     }
 
-    public PostTags getPostTags() {
-        return postTags;
+    public PostTags getTags() {
+        return tags;
+    }
+
+    public List<String> getImagePaths() {
+        return images.getPaths();
+    }
+
+    /**
+     * Confirm
+     */
+    public boolean hasTags() {
+        return tags.exists();
+    }
+
+    public boolean hasImages() {
+        return images.hasImages();
     }
 }

@@ -1,6 +1,6 @@
 spring:
   profiles:
-    include: db
+    include: db, aws
   jpa:
     show-sql: true
     properties:
