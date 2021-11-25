@@ -12,7 +12,7 @@ import javax.persistence.OneToMany;
 public class PostTags {
 
 	@OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-	private List<PostTag> tags = new ArrayList<>();
+	private final List<PostTag> tags = new ArrayList<>();
 
 	public PostTags() {}
 

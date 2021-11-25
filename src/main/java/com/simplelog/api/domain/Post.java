@@ -2,7 +2,15 @@ package com.simplelog.api.domain;
 
 import java.util.List;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Embedded;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -23,7 +31,7 @@ public class Post extends BaseTimeEntity {
     private String content;
 
     @Embedded
-    private PostTags postTags = new PostTags();
+    private PostTags tags = new PostTags();
 
     @Embedded
     private PostImages images = new PostImages();
@@ -33,17 +41,16 @@ public class Post extends BaseTimeEntity {
         this.content = content;
     }
 
-    public Post(Long id, User user, String content, List<String> inputTags) {
+    public Post(Long id, User user, String content) {
         this(user, content);
         this.id = id;
-        addTags(inputTags);
     }
 
     /**
      * Update
      */
-    public void addTags(List<String> inputTags) {
-        this.postTags.addAll(this, inputTags);
+    public void addTags(List<String> tags) {
+        this.tags.addAll(this, tags);
     }
 
     public void addImages(List<String> images) {
@@ -61,8 +68,8 @@ public class Post extends BaseTimeEntity {
         return id;
     }
 
-    public PostTags getPostTags() {
-        return postTags;
+    public PostTags getTags() {
+        return tags;
     }
 
     public List<String> getImageUrls() {
@@ -73,7 +80,7 @@ public class Post extends BaseTimeEntity {
      * Confirm
      */
     public boolean hasTags() {
-        return postTags.exists();
+        return tags.exists();
     }
 
     public boolean hasImages() {

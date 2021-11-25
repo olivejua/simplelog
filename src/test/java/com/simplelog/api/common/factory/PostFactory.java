@@ -42,7 +42,7 @@ public class PostFactory {
 			return;
 		}
 
-		PostTags postTags = post.getPostTags();
+		PostTags postTags = post.getTags();
 		tagRepository.saveAll(postTags.getAll());
 	}
 

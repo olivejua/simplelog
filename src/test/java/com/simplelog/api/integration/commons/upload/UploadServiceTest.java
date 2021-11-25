@@ -1,11 +1,13 @@
 package com.simplelog.api.integration.commons.upload;
 
-import com.simplelog.api.common.factory.MockPost;
-import com.simplelog.api.common.factory.MockUser;
-import com.simplelog.api.commons.upload.UploadService;
-import com.simplelog.api.domain.Post;
-import com.simplelog.api.domain.User;
-import com.simplelog.api.integration.IntegrationTest;
+import static com.simplelog.api.utils.ImageUtils.*;
+import static org.junit.jupiter.api.Assertions.*;
+
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.http.entity.ContentType;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,14 +17,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
-import static com.simplelog.api.utils.ImageUtils.POST_IMAGE_PATH;
-import static com.simplelog.api.utils.ImageUtils.USER_PROFILE_PATH;
-import static org.junit.jupiter.api.Assertions.*;
+import com.simplelog.api.common.factory.MockPost;
+import com.simplelog.api.common.factory.MockUser;
+import com.simplelog.api.commons.upload.UploadService;
+import com.simplelog.api.domain.Post;
+import com.simplelog.api.domain.User;
+import com.simplelog.api.integration.IntegrationTest;
 
 public class UploadServiceTest extends IntegrationTest {
 

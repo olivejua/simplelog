@@ -1,5 +1,6 @@
 package com.simplelog.api.common.factory;
 
+import com.simplelog.api.domain.Profile;
 import com.simplelog.api.domain.User;
 
 public class MockUser {
@@ -48,7 +49,7 @@ public class MockUser {
 				nickname,
 				email,
 				socialCode,
-				profileMessage
+				new Profile(profileMessage)
 			);
 		}
 	}

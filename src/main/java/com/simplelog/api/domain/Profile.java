@@ -1,10 +1,11 @@
 package com.simplelog.api.domain;
 
-import lombok.Getter;
-import org.springframework.util.StringUtils;
-
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+
+import org.springframework.util.StringUtils;
+
+import lombok.Getter;
 
 @Getter
 @Embeddable
@@ -15,7 +16,7 @@ public class Profile {
     @Column(name = "profile_url")
     private String imageUrl;
 
-    public Profile() {
+    protected Profile() {
     }
 
     public Profile(String message) {
@@ -25,14 +26,6 @@ public class Profile {
     public Profile(String message, String imageUrl) {
         this(message);
         this.imageUrl = imageUrl;
-    }
-
-    public void updateImageUrl(String url) {
-        imageUrl = url;
-    }
-
-    public void removeImageUrl() {
-        imageUrl = null;
     }
 
     public boolean hasImage() {

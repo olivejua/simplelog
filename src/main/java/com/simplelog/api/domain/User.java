@@ -1,6 +1,11 @@
 package com.simplelog.api.domain;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Embedded;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -25,15 +30,15 @@ public class User extends BaseTimeEntity {
     @Embedded
     private Profile profile;
 
-    public User(String nickname, String email, String socialCode, String profileMessage) {
+    public User(String nickname, String email, String socialCode, Profile profile) {
         this.nickname = nickname;
         this.email = email;
         this.socialCode = socialCode;
-        this.profile = new Profile(profileMessage);
+        this.profile = profile;
     }
 
-    public User(Long id, String nickname, String email, String socialCode, String profileMessage) {
-        this(nickname, email, socialCode, profileMessage);
+    public User(Long id, String nickname, String email, String socialCode, Profile profile) {
+        this(nickname, email, socialCode, profile);
         this.id = id;
     }
 
@@ -41,11 +46,11 @@ public class User extends BaseTimeEntity {
      * update
      */
     public void updateProfileImage(String imageUrl) {
-        profile.updateImageUrl(imageUrl);
+        profile = new Profile(profile.getMessage(), imageUrl);
     }
 
     public void removeProfileImage() {
-        profile.removeImageUrl();
+        profile = new Profile(profile.getMessage());
     }
 
     /**

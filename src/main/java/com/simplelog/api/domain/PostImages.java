@@ -21,11 +21,9 @@ public class PostImages {
             joinColumns = @JoinColumn(name = "post_id"))
     @BatchSize(size = 30)
     @Column(name = "image_url", nullable = false)
-    private List<String> imageUrls;
+    private final List<String> imageUrls = new ArrayList<>();
 
-    public PostImages() {
-        imageUrls = new ArrayList<>();
-    }
+    public PostImages() {}
 
     public void addAll(List<String> images) {
         imageUrls.addAll(images);
