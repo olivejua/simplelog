@@ -1,13 +1,5 @@
 package com.simplelog.api.commons.upload;
 
-import com.amazonaws.services.s3.AmazonS3Client;
-import com.amazonaws.services.s3.model.*;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-import org.springframework.web.multipart.MultipartFile;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -15,12 +7,26 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
+
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.DeleteObjectRequest;
+import com.amazonaws.services.s3.model.DeleteObjectsRequest;
+import com.amazonaws.services.s3.model.DeleteObjectsResult;
+import com.amazonaws.services.s3.model.PutObjectRequest;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
 @Slf4j
 @RequiredArgsConstructor
 @Component
 public class S3Uploader {
 
-    private final AmazonS3Client amazonS3Client;
+    private final AmazonS3 amazonS3;
 
     @Value("${cloud.aws.s3.bucket}")
     public String bucket;
@@ -45,8 +51,8 @@ public class S3Uploader {
     }
 
     private String putS3(File uploadFile, String key) {
-        amazonS3Client.putObject(new PutObjectRequest(bucket, key, uploadFile).withCannedAcl(CannedAccessControlList.PublicRead));
-        return amazonS3Client.getUrl(bucket, key).toString();
+        amazonS3.putObject(new PutObjectRequest(bucket, key, uploadFile).withCannedAcl(CannedAccessControlList.PublicRead));
+        return amazonS3.getUrl(bucket, key).toString();
     }
 
     private void removeTempFile(File targetFile) {
@@ -78,7 +84,7 @@ public class S3Uploader {
      * @param filePath bucket 이름을 제외한 파일 경로 (예 - user/profile/1/testImage.jpg)
      */
     public void remove(String filePath) {
-        amazonS3Client.deleteObject(new DeleteObjectRequest(bucket, filePath));
+        amazonS3.deleteObject(new DeleteObjectRequest(bucket, filePath));
     }
 
     /**
@@ -93,7 +99,7 @@ public class S3Uploader {
                 .withKeys(keys)
                 .withQuiet(false);
 
-        DeleteObjectsResult result = amazonS3Client.deleteObjects(request);
+        DeleteObjectsResult result = amazonS3.deleteObjects(request);
         return result.getDeletedObjects().size();
     }
 
