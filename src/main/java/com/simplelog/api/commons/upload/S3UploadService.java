@@ -64,7 +64,7 @@ public class S3UploadService implements UploadService {
 
     public int removeAll(Post post) {
         PostImages images = post.getImages();
-        if (!images.isNotEmpty()) {
+        if (images.isEmpty()) {
             log.info("삭제할 이미지가 없습니다.");
             return 0;
         }

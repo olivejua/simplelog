@@ -1,11 +1,17 @@
 package com.simplelog.api.domain;
 
-import lombok.Getter;
-import org.hibernate.annotations.BatchSize;
-
-import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.persistence.CollectionTable;
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
+import javax.persistence.Embeddable;
+import javax.persistence.JoinColumn;
+
+import org.hibernate.annotations.BatchSize;
+
+import lombok.Getter;
 
 @Getter
 @Embeddable
@@ -29,7 +35,7 @@ public class PostImages {
         imageUrls.clear();
     }
 
-    public boolean isNotEmpty() {
-        return !imageUrls.isEmpty();
+    public boolean isEmpty() {
+        return imageUrls.isEmpty();
     }
 }
