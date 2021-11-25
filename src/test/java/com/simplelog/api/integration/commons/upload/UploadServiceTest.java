@@ -1,12 +1,14 @@
 package com.simplelog.api.integration.commons.upload;
 
-import static com.simplelog.api.utils.ImageUtils.*;
+import static com.simplelog.api.utils.DomainImagePaths.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.apache.http.entity.ContentType;
 import org.junit.jupiter.api.AfterEach;
@@ -56,8 +58,8 @@ public class UploadServiceTest extends IntegrationTest {
 
     @AfterEach
     void cleanup() {
-        uploadService.remove(mockUser);
-        uploadService.removeAll(mockPost);
+        uploadService.remove(mockUser.getProfileImagePath());
+        uploadService.remove(mockPost.getImagePaths());
     }
 
 
@@ -65,7 +67,10 @@ public class UploadServiceTest extends IntegrationTest {
     @DisplayName("유저 프로필 이미지를 S3 스토리지에 업로드한다")
     void testUploadUserProfileImage() throws IOException {
         MultipartFile uploadFile = getMockImage();
-        String savedImageUrl = uploadService.upload(mockUser, uploadFile);
+
+        String path = makeUserProfilePath(mockUser.getId(), uploadFile.getOriginalFilename());
+        String savedImageUrl = uploadService.upload(uploadFile, path);
+        mockUser.updateProfileImage(savedImageUrl);
 
         assertFalse(savedImageUrl.isEmpty());
         assertTrue(savedImageUrl.contains(USER_PROFILE_PATH));
@@ -74,17 +79,29 @@ public class UploadServiceTest extends IntegrationTest {
     @Test
     @DisplayName("게시글 첨부이미지 목록을 S3 스토리지에 업로드한다")
     void testPostImageUpload() throws IOException {
-        List<MultipartFile> uploadFiles = new ArrayList<>();
-        for (int i = 0; i < 3; i++) {
-            uploadFiles.add(getMockImage());
-        }
+        int size = 3;
 
-        List<String> savedUrls = uploadService.upload(mockPost, uploadFiles);
+        Map<String, MultipartFile> fileMap = makeMockPostImages(size);
+        List<String> savedUrls = uploadService.upload(fileMap);
+        mockPost.addImages(savedUrls);
 
-        assertEquals(3, savedUrls.size());
+        assertEquals(size, savedUrls.size());
         assertTrue(savedUrls.get(0).contains(POST_IMAGE_PATH));
         assertTrue(savedUrls.get(1).contains(POST_IMAGE_PATH));
         assertTrue(savedUrls.get(2).contains(POST_IMAGE_PATH));
+    }
+
+    private Map<String, MultipartFile> makeMockPostImages(int size) throws IOException {
+        List<MultipartFile> uploadFiles = new ArrayList<>();
+        for (int i = 0; i < size; i++) {
+            uploadFiles.add(getMockImage());
+        }
+
+        return uploadFiles.stream()
+            .collect(Collectors.toMap(
+                file -> makePostPath(mockPost.getId(), file.getOriginalFilename()),
+                file -> file
+            ));
     }
 
     private MultipartFile getMockImage() throws IOException {

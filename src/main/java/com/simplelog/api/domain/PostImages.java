@@ -1,7 +1,10 @@
 package com.simplelog.api.domain;
 
+import static com.simplelog.api.utils.DomainImagePaths.*;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
@@ -35,5 +38,11 @@ public class PostImages {
 
     public boolean hasImages() {
         return !imageUrls.isEmpty();
+    }
+
+    public List<String> getPaths() {
+        return imageUrls.stream()
+            .map(url -> extractPathFromUrl(POST_IMAGE_PATH, url))
+            .collect(Collectors.toList());
     }
 }

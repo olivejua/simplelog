@@ -43,7 +43,7 @@ public class User extends BaseTimeEntity {
     }
 
     /**
-     * update
+     * Update
      */
     public void updateProfileImage(String imageUrl) {
         profile = new Profile(profile.getMessage(), imageUrl);
@@ -60,8 +60,8 @@ public class User extends BaseTimeEntity {
         return id;
     }
 
-    public String getProfileImageUrl() {
-        return profile.getImageUrl();
+    public String getProfileImagePath() {
+        return profile.getImagePath();
     }
 
     /**

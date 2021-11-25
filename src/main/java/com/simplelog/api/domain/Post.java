@@ -72,8 +72,8 @@ public class Post extends BaseTimeEntity {
         return tags;
     }
 
-    public List<String> getImageUrls() {
-        return images.getImageUrls();
+    public List<String> getImagePaths() {
+        return images.getPaths();
     }
 
     /**

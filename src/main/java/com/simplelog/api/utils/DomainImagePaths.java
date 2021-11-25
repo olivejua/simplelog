@@ -1,13 +1,9 @@
 package com.simplelog.api.utils;
 
-import com.simplelog.api.domain.Post;
-import com.simplelog.api.domain.User;
-import org.springframework.web.multipart.MultipartFile;
-
 import java.util.List;
 import java.util.UUID;
 
-public abstract class ImageUtils {
+public abstract class DomainImagePaths {
     private final static String SEP = "/";
 
     public final static String USER_PROFILE_PATH = "user" + SEP + "profile" + SEP;
@@ -15,15 +11,15 @@ public abstract class ImageUtils {
 
     private final static List<String> IMAGE_EXTENSIONS = List.of("gif", "jpeg", "jpg", "png", "bmp", "pdf", "mp4");
 
-    public static String getImagePath(User user, MultipartFile file) {
-        return makeImagePath(USER_PROFILE_PATH, user.getId(), file.getOriginalFilename());
+    public static String makeUserProfilePath(Long userId, String fileName) {
+        return makePath(USER_PROFILE_PATH, userId, fileName);
     }
 
-    public static String getImagePath(Post post, MultipartFile file) {
-        return makeImagePath(POST_IMAGE_PATH, post.getId(), file.getOriginalFilename());
+    public static String makePostPath(Long postId, String fileName) {
+        return makePath(POST_IMAGE_PATH, postId, fileName);
     }
 
-    private static String makeImagePath(String domainPath, Long domainId, String fileName) {
+    private static String makePath(String domainPath, Long domainId, String fileName) {
         String extension = getExtension(fileName);
         validateImage(extension);
 
@@ -46,5 +42,10 @@ public abstract class ImageUtils {
         }
 
         return fileName.substring(idx+1);
+    }
+
+    public static String extractPathFromUrl(String path, String url) {
+        int idx = url.lastIndexOf(path);
+        return url.substring(idx);
     }
 }

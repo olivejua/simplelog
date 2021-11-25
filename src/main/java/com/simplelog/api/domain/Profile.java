@@ -1,5 +1,7 @@
 package com.simplelog.api.domain;
 
+import static com.simplelog.api.utils.DomainImagePaths.*;
+
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
@@ -30,5 +32,13 @@ public class Profile {
 
     public boolean hasImage() {
         return StringUtils.hasText(imageUrl);
+    }
+
+    public String getImagePath() {
+        if (hasImage()) {
+            return extractPathFromUrl(USER_PROFILE_PATH, imageUrl);
+        }
+
+        return imageUrl;
     }
 }

@@ -1,8 +1,10 @@
 package com.simplelog.api.unit.utils;
 
-import com.simplelog.api.common.factory.MockUser;
-import com.simplelog.api.domain.User;
-import com.simplelog.api.utils.ImageUtils;
+import static org.junit.jupiter.api.Assertions.*;
+
+import java.io.FileInputStream;
+import java.io.IOException;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -11,12 +13,11 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.mock.web.MockMultipartFile;
 
-import java.io.FileInputStream;
-import java.io.IOException;
+import com.simplelog.api.common.factory.MockUser;
+import com.simplelog.api.domain.User;
+import com.simplelog.api.utils.DomainImagePaths;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-
-public class ImageUtilsTest {
+public class DomainFilePathsTest {
 
     private User mockUser;
 
@@ -36,7 +37,8 @@ public class ImageUtilsTest {
     void testValidateImages(String extension) throws IOException {
         MockMultipartFile mockImage = getMockMultipartFile("testImage", extension);
 
-        assertDoesNotThrow(() -> ImageUtils.getImagePath(mockUser, mockImage));
+        assertDoesNotThrow(() ->
+            DomainImagePaths.makeUserProfilePath(mockUser.getId(), mockImage.getOriginalFilename()));
     }
 
     @DisplayName("확장자가 이미지가 아니라면 예외가 발생한다")
@@ -44,7 +46,8 @@ public class ImageUtilsTest {
     void testValidateImages() throws IOException {
         MockMultipartFile mockTextFile = getMockMultipartFile("testText", "txt");
 
-        Assertions.assertThrows(IllegalArgumentException.class, () -> ImageUtils.getImagePath(mockUser, mockTextFile));
+        Assertions.assertThrows(IllegalArgumentException.class,
+            () -> DomainImagePaths.makeUserProfilePath(mockUser.getId(), mockTextFile.getOriginalFilename()));
     }
 
 

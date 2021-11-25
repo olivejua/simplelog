@@ -1,16 +1,13 @@
 package com.simplelog.api.commons.upload;
 
-import static com.simplelog.api.utils.ImageUtils.*;
-
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.simplelog.api.domain.Post;
-import com.simplelog.api.domain.User;
+import com.amazonaws.util.StringUtils;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,63 +22,40 @@ public class S3UploadService implements UploadService {
      * Upload
      **************************************************************************************************/
 
-    public String upload(User user, MultipartFile uploadFile) {
-        String savedPath = getImagePath(user, uploadFile);
-        String uploadedUrl = s3Uploader.upload(uploadFile, savedPath);
-
-        user.updateProfileImage(uploadedUrl);
-        return uploadedUrl;
+    public String upload(MultipartFile file, String path) {
+        return s3Uploader.upload(file, path);
     }
 
-    public List<String> upload(Post post, List<MultipartFile> uploadFiles) {
-        List<String> uploadedUrls = new ArrayList<>();
+    public List<String> upload(Map<String, MultipartFile> filePathMap) {
+        return filePathMap.entrySet().stream()
+            .map(entry -> {
+                MultipartFile file = entry.getValue();
+                String path = entry.getKey();
 
-        for (MultipartFile uploadFile : uploadFiles) {
-            String savedPath = getImagePath(post, uploadFile);
-            String imageUrl = s3Uploader.upload(uploadFile, savedPath);
-            uploadedUrls.add(imageUrl);
-        }
-
-        post.addImages(uploadedUrls);
-        return uploadedUrls;
+                return upload(file, path);
+            })
+            .collect(Collectors.toList());
     }
 
     /***************************************************************************************************
      * Remove
      **************************************************************************************************/
 
-    public void remove(User user) {
-        if (!user.hasProfileImage()) {
+    public void remove(String path) {
+        if (StringUtils.isNullOrEmpty(path)) {
             log.info("삭제할 이미지가 없습니다.");
             return;
         }
 
-        String path = extractPathFromUrl(user.getProfileImageUrl(), USER_PROFILE_PATH);
         s3Uploader.remove(path);
-        user.removeProfileImage();
     }
 
-    public int removeAll(Post post) {
-        if (!post.hasImages()) {
+    public int remove(List<String> paths) {
+        if (paths==null || paths.isEmpty()) {
             log.info("삭제할 이미지가 없습니다.");
             return 0;
         }
 
-        List<String> paths = mapToPaths(post.getImageUrls(), POST_IMAGE_PATH);
-        int sizeOfRemovedImages = s3Uploader.remove(paths);
-        post.removeImagesAll();
-
-        return sizeOfRemovedImages;
-    }
-
-    private List<String> mapToPaths(List<String> targetUrls, String domainPath) {
-        return targetUrls.stream()
-                .map(url -> extractPathFromUrl(url, domainPath))
-                .collect(Collectors.toList());
-    }
-
-    private String extractPathFromUrl(String url, String domainPath) {
-        int idx = url.lastIndexOf(domainPath);
-        return url.substring(idx);
+        return s3Uploader.remove(paths);
     }
 }
