@@ -55,7 +55,14 @@ public class User extends BaseTimeEntity {
         return id;
     }
 
-    public Profile getProfile() {
-        return profile;
+    public String getProfileImageUrl() {
+        return profile.getImageUrl();
+    }
+
+    /**
+     * Confirm
+     */
+    public boolean hasProfileImage() {
+        return profile.hasImage();
     }
 }

@@ -39,12 +39,11 @@ public class Post extends BaseTimeEntity {
         addTags(inputTags);
     }
 
+    /**
+     * Update
+     */
     public void addTags(List<String> inputTags) {
         this.postTags.addAll(this, inputTags);
-    }
-
-    public boolean hasTags() {
-        return postTags.exists();
     }
 
     public void addImages(List<String> images) {
@@ -66,7 +65,18 @@ public class Post extends BaseTimeEntity {
         return postTags;
     }
 
-    public PostImages getImages() {
-        return images;
+    public List<String> getImageUrls() {
+        return images.getImageUrls();
+    }
+
+    /**
+     * Confirm
+     */
+    public boolean hasTags() {
+        return postTags.exists();
+    }
+
+    public boolean hasImages() {
+        return images.hasImages();
     }
 }

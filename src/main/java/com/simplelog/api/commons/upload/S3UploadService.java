@@ -1,19 +1,19 @@
 package com.simplelog.api.commons.upload;
 
-import com.simplelog.api.domain.Post;
-import com.simplelog.api.domain.PostImages;
-import com.simplelog.api.domain.Profile;
-import com.simplelog.api.domain.User;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
+import static com.simplelog.api.utils.ImageUtils.*;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.simplelog.api.utils.ImageUtils.*;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import com.simplelog.api.domain.Post;
+import com.simplelog.api.domain.User;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -51,26 +51,24 @@ public class S3UploadService implements UploadService {
      **************************************************************************************************/
 
     public void remove(User user) {
-        Profile userProfile = user.getProfile();
-        if (!userProfile.existImage()) {
+        if (!user.hasProfileImage()) {
             log.info("삭제할 이미지가 없습니다.");
             return;
         }
 
-        String key = extractPathFromUrl(userProfile.getImageUrl(), USER_PROFILE_PATH);
-        s3Uploader.remove(key);
+        String path = extractPathFromUrl(user.getProfileImageUrl(), USER_PROFILE_PATH);
+        s3Uploader.remove(path);
         user.removeProfileImage();
     }
 
     public int removeAll(Post post) {
-        PostImages images = post.getImages();
-        if (images.isEmpty()) {
+        if (!post.hasImages()) {
             log.info("삭제할 이미지가 없습니다.");
             return 0;
         }
 
-        List<String> keys = mapToPaths(images.getImageUrls(), POST_IMAGE_PATH);
-        int sizeOfRemovedImages = s3Uploader.remove(keys);
+        List<String> paths = mapToPaths(post.getImageUrls(), POST_IMAGE_PATH);
+        int sizeOfRemovedImages = s3Uploader.remove(paths);
         post.removeImagesAll();
 
         return sizeOfRemovedImages;

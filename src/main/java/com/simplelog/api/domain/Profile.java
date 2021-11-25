@@ -35,7 +35,7 @@ public class Profile {
         imageUrl = null;
     }
 
-    public boolean existImage() {
+    public boolean hasImage() {
         return StringUtils.hasText(imageUrl);
     }
 }

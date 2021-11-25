@@ -35,7 +35,7 @@ public class PostImages {
         imageUrls.clear();
     }
 
-    public boolean isEmpty() {
-        return imageUrls.isEmpty();
+    public boolean hasImages() {
+        return !imageUrls.isEmpty();
     }
 }
