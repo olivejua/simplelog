@@ -28,25 +28,25 @@ public class S3Uploader {
     /**
      * S3 스토리지로 파일을 업로드해줍니다.
      * @param multipartFile 유저가 업로드한 파일
-     * @param savedPath 저장될 경로명 (파일 확장자까지 포함)
+     * @param key 저장될 경로명 (파일 확장자까지 포함)
      * @return 저장한 ImageUrl
      */
-    public String upload(MultipartFile multipartFile, String savedPath) {
+    public String upload(MultipartFile multipartFile, String key) {
         File uploadFile = convert(multipartFile)
                 .orElseThrow(() -> new IllegalArgumentException("error: MultipartFile -> File convert fail"));
 
-        return uploadToS3(uploadFile, savedPath);
+        return uploadToS3(uploadFile, key);
     }
 
-    private String uploadToS3(File uploadFile, String savedPath) {
-        String uploadImageUrl = putS3(uploadFile, savedPath);
+    private String uploadToS3(File uploadFile, String key) {
+        String uploadImageUrl = putS3(uploadFile, key);
         removeTempFile(uploadFile);
         return uploadImageUrl;
     }
 
-    private String putS3(File uploadFile, String fileName) {
-        amazonS3Client.putObject(new PutObjectRequest(bucket, fileName, uploadFile).withCannedAcl(CannedAccessControlList.PublicRead));
-        return amazonS3Client.getUrl(bucket, fileName).toString();
+    private String putS3(File uploadFile, String key) {
+        amazonS3Client.putObject(new PutObjectRequest(bucket, key, uploadFile).withCannedAcl(CannedAccessControlList.PublicRead));
+        return amazonS3Client.getUrl(bucket, key).toString();
     }
 
     private void removeTempFile(File targetFile) {

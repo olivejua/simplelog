@@ -57,7 +57,7 @@ public class S3UploadService implements UploadService {
             return;
         }
 
-        String key = extractKey(userProfile.getImageUrl(), USER_PROFILE_PATH);
+        String key = extractPathFromUrl(userProfile.getImageUrl(), USER_PROFILE_PATH);
         s3Uploader.remove(key);
         user.removeProfileImage();
     }
@@ -69,20 +69,20 @@ public class S3UploadService implements UploadService {
             return 0;
         }
 
-        List<String> keys = mapToImageKeyList(images.getImageUrls(), POST_IMAGE_PATH);
+        List<String> keys = mapToPaths(images.getImageUrls(), POST_IMAGE_PATH);
         int sizeOfRemovedImages = s3Uploader.remove(keys);
         post.removeImagesAll();
 
         return sizeOfRemovedImages;
     }
 
-    private List<String> mapToImageKeyList(List<String> targetUrls, String domainPath) {
+    private List<String> mapToPaths(List<String> targetUrls, String domainPath) {
         return targetUrls.stream()
-                .map(url -> extractKey(url, domainPath))
+                .map(url -> extractPathFromUrl(url, domainPath))
                 .collect(Collectors.toList());
     }
 
-    private String extractKey(String url, String domainPath) {
+    private String extractPathFromUrl(String url, String domainPath) {
         int idx = url.lastIndexOf(domainPath);
         return url.substring(idx);
     }
