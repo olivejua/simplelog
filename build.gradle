@@ -37,6 +37,22 @@ dependencies {
 	asciidoctorExtensions 'org.springframework.restdocs:spring-restdocs-asciidoctor'
 }
 
+processResources.dependsOn('copySecret')
+
+task copySecret(type: Copy) {
+	copy {
+		from 'secret'
+		include '*.yml'
+		into 'src/main/resources'
+	}
+
+	copy {
+		from 'secret/application-aws.yml'
+		into 'src/test/resources'
+	}
+
+}
+
 test {
 	useJUnitPlatform()
 	outputs.dir snippetsDir
