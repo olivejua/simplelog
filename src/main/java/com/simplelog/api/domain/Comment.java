@@ -26,12 +26,16 @@ public class Comment extends BaseTimeEntity {
     private String content;
 
     public Comment(User user, Post post, String content) {
-        if (content.length() > 500) {
+        if (invalid(content)) {
             throw new IllegalArgumentException();
         }
         this.user = user;
         this.post = post;
         this.content = content;
+    }
+
+    private boolean invalid(String content) {
+        return content == null || content.isEmpty() || content.length() > 500;
     }
 
     public String getContent() {
