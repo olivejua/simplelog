@@ -42,4 +42,26 @@ class CommentTest {
         assertThrows(IllegalArgumentException.class,
                 () -> new Comment(null, null, content));
     }
+
+    @DisplayName("댓글 생성 시 내용이 null이면 예외가 발생한다")
+    @Test
+    public void createComment_nullContent_throwException() throws Exception {
+        //given
+        String content = null;
+
+        //when, then
+        assertThrows(IllegalArgumentException.class,
+                () -> new Comment(null, null, content));
+    }
+
+    @DisplayName("댓글 생성 시 내용이 빈 문자열이면 예외가 발생한다")
+    @Test
+    public void createComment_emptyContent_throwException() throws Exception {
+        //given
+        String content = "";
+
+        //when, then
+        assertThrows(IllegalArgumentException.class,
+                () -> new Comment(null, null, content));
+    }
 }
