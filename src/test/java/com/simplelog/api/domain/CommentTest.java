@@ -7,61 +7,17 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class CommentTest {
 
-    @DisplayName("댓글을 생성할 수 있다")
+    @DisplayName("Comment 내용은 CommentReplyContent 문자열 값을 반환한다")
     @Test
-    void createComment() {
+    void createComment_getContent_returnsStringValueOfContent() {
         //given
-        String content = "댓글";
-        Comment comment = new Comment(null, null, content);
+        String commentContent = "댓글";
+        CommentReplyContent content = new CommentReplyContent(commentContent);
 
         //when
-        String actual = comment.getContent();
+        Comment comment = new Comment(null, null, content);
 
         //then
-        assertEquals(content, actual);
-    }
-
-    @DisplayName("댓글 생성 시 글자 수 제한을 초과하면 예외가 발생한다 - 영어")
-    @Test
-    public void createComment_exceedEnContentLengthLimit_throwException() throws Exception {
-        //given
-        String content = "a".repeat(501);
-
-        //when, then
-        assertThrows(IllegalArgumentException.class,
-                () -> new Comment(null, null, content));
-    }
-
-    @DisplayName("댓글 생성 시 글자 수 제한을 초과하면 예외가 발생한다 - 한국어")
-    @Test
-    public void createComment_exceedKoContentLengthLimit_throwException() throws Exception {
-        //given
-        String content = "가".repeat(501);
-
-        //when, then
-        assertThrows(IllegalArgumentException.class,
-                () -> new Comment(null, null, content));
-    }
-
-    @DisplayName("댓글 생성 시 내용이 null이면 예외가 발생한다")
-    @Test
-    public void createComment_nullContent_throwException() throws Exception {
-        //given
-        String content = null;
-
-        //when, then
-        assertThrows(IllegalArgumentException.class,
-                () -> new Comment(null, null, content));
-    }
-
-    @DisplayName("댓글 생성 시 내용이 빈 문자열이면 예외가 발생한다")
-    @Test
-    public void createComment_emptyContent_throwException() throws Exception {
-        //given
-        String content = "";
-
-        //when, then
-        assertThrows(IllegalArgumentException.class,
-                () -> new Comment(null, null, content));
+        assertEquals(commentContent, comment.getContent());
     }
 }
