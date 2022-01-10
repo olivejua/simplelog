@@ -18,7 +18,7 @@ public class CommentReplyContent {
 
     public CommentReplyContent(String content) {
         if (invalid(content)) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("content 길이가 유효하지 않습니다.");
         }
         this.content = content;
     }

@@ -27,9 +27,12 @@ class CommentReplyContentTest {
         //given
         String content = null;
 
-        //when, then
-        assertThrows(IllegalArgumentException.class,
-                () -> new CommentReplyContent(content));
+        //when
+        IllegalArgumentException exception = assertThrows(
+                IllegalArgumentException.class, () -> new CommentReplyContent(content));
+
+        //then
+        assertEquals("content 길이가 유효하지 않습니다.", exception.getMessage());
     }
 
     @DisplayName("내용이 빈 문자열이면 예외가 발생한다")
@@ -38,9 +41,12 @@ class CommentReplyContentTest {
         //given
         String content = "";
 
-        //when, then
-        assertThrows(IllegalArgumentException.class,
-                () -> new CommentReplyContent(content));
+        //when
+        IllegalArgumentException exception = assertThrows(
+                IllegalArgumentException.class, () -> new CommentReplyContent(content));
+
+        //then
+        assertEquals("content 길이가 유효하지 않습니다.", exception.getMessage());
     }
 
     @DisplayName("내용이 최대 길이를 초과하면 예외가 발생한다 - 영어")
@@ -49,9 +55,12 @@ class CommentReplyContentTest {
         //given
         String content = "a".repeat(MAX_LENGTH + 1);
 
-        //when, then
-        assertThrows(IllegalArgumentException.class,
-                () -> new CommentReplyContent(content));
+        //when
+        IllegalArgumentException exception = assertThrows(
+                IllegalArgumentException.class, () -> new CommentReplyContent(content));
+
+        //then
+        assertEquals("content 길이가 유효하지 않습니다.", exception.getMessage());
     }
 
     @DisplayName("내용이 최대 길이를 초과하면 예외가 발생한다 - 한국어")
@@ -60,8 +69,11 @@ class CommentReplyContentTest {
         //given
         String content = "가".repeat(MAX_LENGTH + 1);
 
-        //when, then
-        assertThrows(IllegalArgumentException.class,
-                () -> new CommentReplyContent(content));
+        //when
+        IllegalArgumentException exception = assertThrows(
+                IllegalArgumentException.class, () -> new CommentReplyContent(content));
+
+        //then
+        assertEquals("content 길이가 유효하지 않습니다.", exception.getMessage());
     }
 }
