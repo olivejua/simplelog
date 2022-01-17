@@ -22,12 +22,16 @@ public class Comment extends BaseTimeEntity {
     @JoinColumn(name = "post_id", nullable = false)
     private Post post;
 
-    @Column(nullable = false, length = 500)
-    private String content;
+    @Embedded
+    private CommentReplyContent content;
 
-    public Comment(User user, Post post, String content) {
+    public Comment(User user, Post post, CommentReplyContent content) {
         this.user = user;
         this.post = post;
         this.content = content;
+    }
+
+    public String getContent() {
+        return content.get();
     }
 }
